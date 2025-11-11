@@ -130,9 +130,17 @@ instagram-epic-tool/
 ├── analyzer.py            # Follower analysis logic
 ├── visualizer.py          # Network graph visualization
 ├── demo.py                # Demo script (no credentials needed)
+├── test_instagram_tool.py # Unit tests
 ├── requirements.txt       # Python dependencies
 ├── config.env.example     # Example configuration file
 └── README.md             # This file
+```
+
+## 🧪 Testing
+
+Run the unit tests to verify the functionality:
+```bash
+python -m unittest test_instagram_tool.py -v
 ```
 
 ## 🤝 Contributing
