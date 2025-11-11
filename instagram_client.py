@@ -41,7 +41,8 @@ class InstagramClient:
             logger.info("Login successful!")
             return True
         except Exception as e:
-            logger.error(f"Login failed: {str(e)}")
+            # Don't log the full exception to avoid leaking credentials
+            logger.error("Login failed: Invalid credentials or connection error")
             return False
     
     def get_followers(self, user_id: str = None) -> Dict[str, Dict]:
