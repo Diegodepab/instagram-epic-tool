@@ -215,3 +215,4 @@ fans.json
 mutual_followers.json
 instagram_network.png
 *.png
+!demo_instagram_network.png

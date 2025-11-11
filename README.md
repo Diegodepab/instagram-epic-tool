@@ -41,6 +41,15 @@ INSTAGRAM_PASSWORD=your_password_here
 
 ## 📖 Usage
 
+### Demo Mode
+
+Try the tool without Instagram credentials to see how it works:
+```bash
+python demo.py
+```
+
+This will generate a `demo_instagram_network.png` file showing an example network visualization.
+
 ### Basic Commands
 
 **Visualize your network as a graph:**
@@ -96,6 +105,12 @@ The network graph uses different colors to represent different types of relation
 
 Arrows indicate the direction of the follow relationship.
 
+### Example Output
+
+![Demo Instagram Network](demo_instagram_network.png)
+
+*Example visualization showing a user's Instagram network with followers, following, and mutual connections.*
+
 ## 🗂️ Output Files
 
 When you run the tool with `--save-data`, it generates the following JSON files:
@@ -114,6 +129,7 @@ instagram-epic-tool/
 ├── instagram_client.py     # Instagram API client
 ├── analyzer.py            # Follower analysis logic
 ├── visualizer.py          # Network graph visualization
+├── demo.py                # Demo script (no credentials needed)
 ├── requirements.txt       # Python dependencies
 ├── config.env.example     # Example configuration file
 └── README.md             # This file
