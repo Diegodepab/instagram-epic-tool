@@ -1,181 +1,101 @@
-# Instagram Epic Tool 🔍📊
+# CircleScope — Instagram Network Analyzer
 
-Exploring Instagram networks through graph visualisation. A Python-based tool for analyzing followers, unfollowers, and visualizing your Instagram network as an interactive graph.
+CircleScope turns an official Instagram data export into an understandable relationship map. It calculates followers, followed accounts, mutual relationships, people who only follow you, and people who do not follow you back.
 
-## ⚠️ Disclaimer
+The primary export-analysis flow never asks for an Instagram password, does not scrape Instagram, and makes no external API calls. Uploaded ZIP files are processed temporarily and are not retained by the application. A separate, visibly experimental lab can be enabled by an operator for bounded access to an owned or expressly authorized account.
 
-This tool is developed for **educational and personal use only**, without malicious intent. It uses Instagram's API through the `instagrapi` library. Use responsibly and respect Instagram's Terms of Service.
+> [!WARNING]
+> The laboratory is informational, educational, and defensive. Use it only with accounts you own or have explicit permission to assess, at your own risk. Unofficial automation may violate Instagram's terms even when the underlying activity is otherwise lawful. Public visibility is not consent for mass collection. Read the [full disclaimer](DISCLAIMER.md).
 
-## ✨ Features
+The interface includes a fictional demo, exact relationship metrics, a performance-aware interactive graph, multiple authorized ZIP merging, relationship provenance and dates when Meta provides them, complete paginated lists, search, category filters, and CSV export.
 
-- 📊 **Network Visualization**: Display your followers and following as a beautiful graph where each person is a node
-- 🔍 **Unfollowers Detection**: See who doesn't follow you back
-- 👥 **Fans Analysis**: Find people who follow you but you don't follow back
-- 🤝 **Mutual Followers**: Identify mutual follower relationships
-- 📈 **Statistics**: Get detailed statistics about your Instagram network
-- 💾 **Export Data**: Save follower/following data to JSON files for further analysis
+## Start with Docker
 
-## 🚀 Installation
+Requirements: Docker Engine with Docker Compose.
 
-1. Clone this repository:
 ```bash
 git clone https://github.com/Diegodepab/instagram-epic-tool.git
 cd instagram-epic-tool
+docker compose up --build -d
 ```
 
-2. Install required dependencies:
+Open `http://localhost:8080`. Stop the application with:
+
 ```bash
-pip install -r requirements.txt
+docker compose down
 ```
 
-3. Create your configuration file:
+See [User Guide](docs/USER_GUIDE.md) for obtaining and importing an Instagram export, and [Deployment Guide](docs/DEPLOYMENT.md) for development and production instructions.
+
+## Repository Layout
+
+```text
+.
+├── src/
+│   ├── backend/             # FastAPI, parser, analysis and temporary sessions
+│   └── frontend/            # React, TypeScript and interactive graph
+├── tests/                   # Backend unit tests
+├── docs/                    # User, deployment, security and architecture docs
+├── lab/                     # Isolated third-party sources and risk experiments
+├── compose.yaml             # One-command local deployment
+└── .github/workflows/       # CI and automated releases
+```
+
+## Local Development
+
 ```bash
-cp config.env.example config.env
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r src/backend/requirements.txt
+pip install ./lab/instagrapi
+PYTHONPATH=src uvicorn backend.main:app --reload
 ```
 
-4. Edit `config.env` and add your Instagram credentials:
-```
-INSTAGRAM_USERNAME=your_username_here
-INSTAGRAM_PASSWORD=your_password_here
-```
+In another terminal:
 
-## 📖 Usage
-
-### Demo Mode
-
-Try the tool without Instagram credentials to see how it works:
 ```bash
-python demo.py
+cd src/frontend
+npm ci
+npm run dev
 ```
 
-This will generate a `demo_instagram_network.png` file showing an example network visualization.
+Open `http://localhost:5173`.
 
-### Basic Commands
+## Experimental Lab
 
-**Visualize your network as a graph:**
+The risk screen integrates both repositories under `lab/` with different trust boundaries:
+
+- `instagrapi` is installed from the vendored source during the backend image build. Its own-account connector is disabled by default. Enable it locally with `ENABLE_INSTAGRAPI_LAB=true docker compose up --build`; credentials live only for the duration of one request and are never dumped to disk.
+- `Instagram-` is integrated only through a defensive static analyzer. The application reads its Python syntax and hashes files, but never imports or executes its brute-force code and never grants it network access.
+
+See [Lab Risk Assessment](docs/LAB_RISK_ASSESSMENT.md) for limits and promotion criteria. Do not enable the experimental connector on a public deployment.
+
+## Verification
+
 ```bash
-python main.py --visualize
+PYTHONPATH=src python -m unittest discover -s tests -v
+
+cd src/frontend
+npm run lint
+npm run build
 ```
 
-**Analyze your followers and following:**
-```bash
-python main.py --analyze
-```
+## Documentation
 
-**Find users who don't follow you back:**
-```bash
-python main.py --unfollowers
-```
+- [User Guide](docs/USER_GUIDE.md)
+- [Deployment Guide](docs/DEPLOYMENT.md)
+- [Security and Privacy](docs/SECURITY.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Project Governance](docs/PROJECT_GOVERNANCE.md)
+- [Lab Risk Assessment](docs/LAB_RISK_ASSESSMENT.md)
+- [Disclaimer](DISCLAIMER.md)
+- [Third-party notices](THIRD_PARTY_NOTICES.md)
+- [Contributing](CONTRIBUTING.md)
 
-**Find your fans (people you don't follow back):**
-```bash
-python main.py --fans
-```
+## Data Scope
 
-**Show mutual followers:**
-```bash
-python main.py --mutual
-```
+An Instagram export describes the direct relationships of the account that generated it. It does not contain the full follower lists of other profiles. Additional exports can be merged only when their owners provided them with consent; those profiles become genuinely expandable through their imported connections.
 
-### Combined Commands
+## License
 
-**Do everything - analyze and visualize:**
-```bash
-python main.py --visualize --analyze --unfollowers --fans --mutual
-```
-
-**Save data to JSON files:**
-```bash
-python main.py --analyze --save-data
-```
-
-**Custom output file for visualization:**
-```bash
-python main.py --visualize --output my_network.png
-```
-
-## 📊 Graph Visualization
-
-The network graph uses different colors to represent different types of relationships:
-
-- 🔴 **Red**: You (the central node)
-- 🟢 **Green**: Mutual followers (follow each other)
-- 🔵 **Blue**: Your followers
-- 🟡 **Yellow**: People you follow
-
-Arrows indicate the direction of the follow relationship.
-
-### Example Output
-
-![Demo Instagram Network](demo_instagram_network.png)
-
-*Example visualization showing a user's Instagram network with followers, following, and mutual connections.*
-
-## 🗂️ Output Files
-
-When you run the tool with `--save-data`, it generates the following JSON files:
-
-- `followers.json`: List of all your followers
-- `following.json`: List of all people you follow
-- `unfollowers.json`: Users who don't follow you back
-- `fans.json`: Users you don't follow back
-- `mutual_followers.json`: Mutual follower relationships
-
-## 🛠️ Project Structure
-
-```
-instagram-epic-tool/
-├── main.py                 # Main CLI interface
-├── instagram_client.py     # Instagram API client
-├── analyzer.py            # Follower analysis logic
-├── visualizer.py          # Network graph visualization
-├── demo.py                # Demo script (no credentials needed)
-├── test_instagram_tool.py # Unit tests
-├── requirements.txt       # Python dependencies
-├── config.env.example     # Example configuration file
-└── README.md             # This file
-```
-
-## 🧪 Testing
-
-Run the unit tests to verify the functionality:
-```bash
-python -m unittest test_instagram_tool.py -v
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 🙏 Acknowledgments
-
-Inspired by:
-- [davidarroyo1234/InstagramUnfollowers](https://github.com/davidarroyo1234/InstagramUnfollowers)
-- [natrixdev/instagram-botter](https://github.com/natrixdev/instagram-botter)
-
-## ⚙️ Technical Details
-
-This tool uses:
-- `instagrapi` for Instagram API access
-- `networkx` for graph creation and analysis
-- `matplotlib` for graph visualization
-- `python-dotenv` for configuration management
-
-## 🐛 Troubleshooting
-
-**Login Issues:**
-- Make sure your credentials are correct in `config.env`
-- Instagram may require 2FA - you might need to disable it temporarily
-- If you get rate limited, wait a few minutes before trying again
-
-**Visualization Issues:**
-- If the graph looks cluttered with many followers, the tool automatically handles layout
-- Try adjusting the figure size in the code if needed
-
-**Data Collection:**
-- Large accounts may take longer to fetch all followers/following
-- Be patient and let the tool complete
+MIT — see [LICENSE](LICENSE).

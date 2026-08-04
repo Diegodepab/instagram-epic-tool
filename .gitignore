@@ -16,6 +16,8 @@ eggs/
 .eggs/
 lib/
 lib64/
+!lab/Instagram-/lib/
+!lab/Instagram-/lib/**
 parts/
 sdist/
 var/
@@ -207,7 +209,25 @@ marimo/_lsp/
 __marimo__/
 
 # Instagram Epic Tool specific
+data/
+metadataSearchTool/
+node_modules/
+src/frontend/dist/
+src/frontend/.vite/
+*.tsbuildinfo
 config.env
+.env.*
+!.env.example
+!**/.env.example
+*.session.json
+session.json
+cookies.json
+*.sqlite
+*.sqlite3
+*.db
+*passlist*.txt
+*password*.txt
+*proxies*.txt
 followers.json
 following.json
 unfollowers.json
