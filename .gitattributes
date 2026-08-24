@@ -1,0 +1,10 @@
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.zip binary
+
+lab/instagrapi/** linguist-vendored
+lab/Instagram-/** linguist-vendored

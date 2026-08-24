@@ -1,0 +1,131 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "instagrapi"
+version = "2.18.12"
+authors = [
+    {name = "Mark Subzeroid", email = "143403577+subzeroid@users.noreply.github.com"}
+]
+description = "Fast and effective Instagram Private API wrapper"
+readme = {file = "README.md", content-type = "text/markdown"}
+license = "MIT"
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+keywords = [
+    "instagram private api",
+    "instagram-private-api",
+    "instagram api",
+    "instagram-api",
+    "instagram",
+    "instagram-scraper",
+    "instagram-client",
+    "instagram-stories",
+    "instagram-feed",
+    "instagram-reels",
+    "instagram-insights",
+    "downloader",
+    "uploader",
+    "videos",
+    "photos",
+    "albums",
+    "igtv",
+    "reels",
+    "stories",
+    "pictures",
+    "instagram-user-photos",
+    "instagram-photos",
+    "instagram-metadata",
+    "instagram-downloader",
+    "instagram-uploader",
+    "instagram-note",
+]
+dependencies = [
+    "requests>=2.34.2,<3",
+    "PySocks>=1.7.1,<2",
+    "pydantic==2.12.5; sys_platform == 'android'",
+    "pydantic>=2.12.5,<2.14; sys_platform != 'android'",
+    "Pillow>=12.2.0,<13",
+    "pycryptodomex>=3.23.0,<4",
+]
+
+[project.urls]
+Homepage = "https://instagrapi.com"
+Repository = "https://github.com/subzeroid/instagrapi"
+Documentation = "https://subzeroid.github.io/instagrapi/"
+Issues = "https://github.com/subzeroid/instagrapi/issues"
+Guides = "https://instagrapi.com/guides/"
+
+[project.optional-dependencies]
+curl = [
+    "curl-adapter>=1.2.1",
+]
+video = [
+    # MoviePy 2.2.1 still declares pillow<12, while instagrapi requires Pillow 12.2.0
+    # for security fixes. Install MoviePy itself with --no-deps after this extra.
+    "decorator>=4.0.2,<6.0",
+    "imageio>=2.5,<3.0",
+    "imageio-ffmpeg>=0.2.0",
+    "numpy>=1.25.0",
+    "proglog<=1.0.0",
+    "python-dotenv>=0.10",
+]
+test = [
+    "bandit==1.9.4",
+    "decorator>=4.0.2,<6.0",
+    "imageio>=2.5,<3.0",
+    "imageio-ffmpeg>=0.2.0",
+    "mike==2.2.0",
+    # mike implicitly imports pkg_resources from setuptools — see
+    # https://github.com/jimporter/mike/issues/148
+    "setuptools==83.0.0",
+    "markdown-include==0.8.1",
+    "mkdocs-material==9.7.7",
+    "mkdocstrings[python]==1.0.6",
+    "numpy>=1.25.0",
+    "pre-commit==4.6.1",
+    "proglog<=1.0.0",
+    "pytest-xdist==3.8.0",
+    "pytest==9.1.1",
+    "python-dotenv>=0.10",
+    "ruff==0.16.0",
+]
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["instagrapi*"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+exclude = [
+    ".eggs",
+    ".git",
+    ".venv",
+    "build",
+    "dist",
+    "env",
+    "site",
+    "venv",
+    "*.egg-info",
+]
+
+[tool.ruff.lint]
+select = ["E9", "F63", "F7", "F82", "I"]
+
+[tool.bandit]
+exclude_dirs = ["*venv*", "*env*", "*scratch*"]
+skips = ["B101", "B311", "B303", "B306"]
