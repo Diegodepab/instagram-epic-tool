@@ -1,4 +1,4 @@
-import type { APIGraphPayload, DefensiveAssessment, ImportResponse, LabStatus, OwnAccountResult, RelationshipCategory, RelationshipPage } from '../types/domain';
+import type { APIGraphPayload, DefensiveAssessment, ImportResponse, LabStatus, LiveCommitResponse, LiveScanResult, OwnAccountResult, RelationshipCategory, RelationshipPage } from '../types/domain';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? '/api';
 
@@ -123,5 +123,34 @@ export const api = {
     await fetch(`${API_BASE}/analysis/sessions/${encodeURIComponent(sessionId)}`, {
       method: 'DELETE',
     });
+  },
+
+  async liveScan(
+    tempUsername: string,
+    tempPassword: string,
+    targetUsername: string,
+    consent: boolean,
+  ): Promise<LiveScanResult> {
+    return parseResponse(await fetch(`${API_BASE}/lab/live-scan`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        temp_username: tempUsername,
+        temp_password: tempPassword,
+        target_username: targetUsername,
+        consent,
+      }),
+    }));
+  },
+
+  async commitScan(scanId: string, sessionId?: string): Promise<LiveCommitResponse> {
+    return parseResponse(await fetch(`${API_BASE}/lab/live-scan/commit`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        scan_id: scanId,
+        session_id: sessionId ?? null,
+      }),
+    }));
   },
 };

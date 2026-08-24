@@ -104,3 +104,37 @@ export interface OwnAccountResult {
   media_sample: Array<{ id: string; code: string; media_type: number }>;
   limits_applied: { relationships: number; media: number };
 }
+
+// ---------------------------------------------------------------------------
+// Live Scan types
+// ---------------------------------------------------------------------------
+
+export interface LiveProfileItem {
+  username: string;
+  full_name: string;
+  is_private: boolean;
+  profile_pic_b64: string | null;
+}
+
+export interface LiveProfilePreview {
+  username: string;
+  full_name: string;
+  is_private: boolean;
+  profile_pic_b64: string | null;
+  follower_count: number;
+  following_count: number;
+  followers: LiveProfileItem[];
+  following: LiveProfileItem[];
+  followers_complete: boolean;
+  following_complete: boolean;
+}
+
+export interface LiveScanResult {
+  scan_id: string;
+  preview: LiveProfilePreview;
+  warnings: string[];
+}
+
+export interface LiveCommitResponse extends ImportResponse {
+  // Commit returns a standard ImportResponse
+}

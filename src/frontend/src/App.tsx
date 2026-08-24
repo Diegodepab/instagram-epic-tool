@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { GraphCanvas } from './components/GraphCanvas';
 import type { GraphLayout } from './components/GraphCanvas';
+import { LiveScanPanel } from './components/LiveScanPanel';
 import { RelationshipTable } from './components/RelationshipTable';
 import { RiskLab } from './components/RiskLab';
 import { ProductTour } from './components/ProductTour';
@@ -30,7 +31,7 @@ export default function App() {
   const [isTutorialDemo, setIsTutorialDemo] = useState(false);
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
   const [search, setSearch] = useState('');
-  const [view, setView] = useState<'graph' | 'list' | 'risks'>('graph');
+  const [view, setView] = useState<'graph' | 'list' | 'risks' | 'live'>('graph');
   const [graphLayout, setGraphLayout] = useState<GraphLayout>('groups');
   const [mergeUsername, setMergeUsername] = useState('');
   const [mergeFile, setMergeFile] = useState<File | null>(null);
@@ -268,8 +269,8 @@ export default function App() {
       <section className="content-area">
         {analysis.warnings.map((warning) => <div className="data-warning" role="status" key={warning}><strong>Revisa el intervalo del export</strong><span>{warning}</span></div>)}
         <div className="content-header">
-          <div><h1>{view === 'graph' ? 'Mapa de relaciones' : view === 'list' ? 'Directorio' : 'Centro de seguridad'}</h1><p>{view === 'graph' ? `${filteredGraphData.nodes.length} perfiles · ${filteredGraphData.links.length} conexiones` : view === 'list' ? 'Consulta y exporta los perfiles de tu análisis' : 'Integraciones, límites y evaluación técnica'}</p></div>
-          <div className="view-switch" data-tour="view-switch"><button className={view === 'graph' ? 'active' : ''} onClick={() => setView('graph')}>Mapa</button><button className={view === 'list' ? 'active' : ''} onClick={() => setView('list')}>Directorio</button><button className={view === 'risks' ? 'active' : ''} onClick={() => setView('risks')}>Seguridad</button></div>
+          <div><h1>{view === 'graph' ? 'Mapa de relaciones' : view === 'list' ? 'Directorio' : view === 'live' ? 'Exploración en vivo' : 'Centro de seguridad'}</h1><p>{view === 'graph' ? `${filteredGraphData.nodes.length} perfiles · ${filteredGraphData.links.length} conexiones` : view === 'list' ? 'Consulta y exporta los perfiles de tu análisis' : view === 'live' ? 'Escanea cuentas autorizadas sin archivos ZIP' : 'Integraciones, límites y evaluación técnica'}</p></div>
+          <div className="view-switch" data-tour="view-switch"><button className={view === 'graph' ? 'active' : ''} onClick={() => setView('graph')}>Mapa</button><button className={view === 'list' ? 'active' : ''} onClick={() => setView('list')}>Directorio</button><button className={view === 'live' ? 'active' : ''} onClick={() => setView('live')}>Live Scan</button><button className={view === 'risks' ? 'active' : ''} onClick={() => setView('risks')}>Seguridad</button></div>
         </div>
         {view === 'graph' ? <>
           {Boolean(analysis.graph.metadata.truncated) && <div className="limit-banner">Mostramos una selección equilibrada de {analysis.graph.metadata.visible_nodes as number} perfiles para mantener el mapa fluido. La lista contiene el análisis completo.</div>}
@@ -288,7 +289,7 @@ export default function App() {
           <div className="explorer-status"><strong>{filteredGraphData.nodes.length - 1}</strong> perfiles visibles de {graphData.nodes.length - 1}<span>Usa la rueda para acercar y arrastra el fondo para moverte.</span></div>
           <div className="graph-tour-target" data-tour="graph"><GraphCanvas graphData={filteredGraphData} search={search} layout={graphLayout} onNodeSelect={setSelectedNode} onNodeExpand={(nodeId) => expandNode(analysis.session_id, nodeId)} /></div>
           {(isLoading || message) && <div className="graph-message">{isLoading ? <><i className="spinner dark" /> Explorando conexiones conocidas…</> : message}</div>}
-        </> : view === 'list' ? <div className="directory-tour-target" data-tour="directory"><RelationshipTable sessionId={analysis.session_id} summary={analysis.summary} /></div> : <RiskLab />}
+        </> : view === 'list' ? <div className="directory-tour-target" data-tour="directory"><RelationshipTable sessionId={analysis.session_id} summary={analysis.summary} /></div> : view === 'live' ? <LiveScanPanel currentSessionId={analysis.session_id} onAnalysisReady={(result) => { openAnalysis(result); setView('graph'); }} /> : <RiskLab />}
       </section>
     </main>
   );
