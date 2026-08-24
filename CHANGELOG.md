@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented in this file. Releases follow Semantic Versioning and are prepared by release-please from Conventional Commits.
 
+## [0.2.0](https://github.com/Diegodepab/instagram-epic-tool/compare/v0.1.0...v0.2.0) (2026-08-24)
+
+
+### Added
+
+* add backend live scan service ([2eff840](https://github.com/Diegodepab/instagram-epic-tool/commit/2eff840e66368023feb8ef1a81fd85cb08d9e0a7))
+* add live scan interface ([464573e](https://github.com/Diegodepab/instagram-epic-tool/commit/464573e635db22cf7454aef0d925e9430a0757b6))
+* rebuild CircleScope as a secure web application ([a348a96](https://github.com/Diegodepab/instagram-epic-tool/commit/a348a96c627e50bcae8400cdbabac676bdab1d4c))
+
 ## [Unreleased]
 
 ### Added
