@@ -95,3 +95,64 @@ class InstagrapiOwnAccountRequest(BaseModel):
         if not value:
             raise ValueError("Debes confirmar que la cuenta es tuya o que tienes autorización expresa.")
         return value
+
+
+# ---------------------------------------------------------------------------
+# Live Scan schemas
+# ---------------------------------------------------------------------------
+
+
+class LiveProfileItem(BaseModel):
+    """Minimal publicly-visible profile data for a single user."""
+    username: str
+    full_name: str = ""
+    is_private: bool = False
+    profile_pic_b64: str | None = None
+
+
+class LiveProfilePreview(BaseModel):
+    """Preview card for a scanned target account."""
+    username: str
+    full_name: str = ""
+    is_private: bool = False
+    profile_pic_b64: str | None = None
+    follower_count: int = 0
+    following_count: int = 0
+    followers: List[LiveProfileItem] = Field(default_factory=list)
+    following: List[LiveProfileItem] = Field(default_factory=list)
+    followers_complete: bool = False
+    following_complete: bool = False
+
+
+class LiveScanRequest(BaseModel):
+    """Frontend request to scan a target account via a temporary login."""
+    temp_username: str = Field(min_length=1, max_length=30, pattern=r"^[A-Za-z0-9._]+$")
+    temp_password: SecretStr = Field(min_length=6, max_length=256)
+    target_username: str = Field(min_length=1, max_length=30, pattern=r"^[A-Za-z0-9._]+$")
+    consent: bool
+
+    @field_validator("consent")
+    @classmethod
+    def require_scan_consent(cls, value: bool) -> bool:
+        if not value:
+            raise ValueError(
+                "Debes confirmar que tienes autorización expresa del propietario "
+                "de la cuenta objetivo."
+            )
+        return value
+
+
+class LiveScanResult(BaseModel):
+    """Response returned after a live scan (preview, not yet committed)."""
+    scan_id: str
+    preview: LiveProfilePreview
+    warnings: List[str] = Field(default_factory=list)
+
+
+class LiveCommitRequest(BaseModel):
+    """Request to persist a previewed scan into an analysis session."""
+    scan_id: str = Field(min_length=20, max_length=128)
+    session_id: str | None = Field(
+        default=None,
+        description="If provided, merge into this existing session. Otherwise create a new one.",
+    )

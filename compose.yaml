@@ -6,6 +6,11 @@ services:
     restart: unless-stopped
     environment:
       ENABLE_INSTAGRAPI_LAB: ${ENABLE_INSTAGRAPI_LAB:-false}
+      IG_PROXY: ${IG_PROXY:-}
+      LIVE_SCAN_FOLLOWERS_LIMIT: ${LIVE_SCAN_FOLLOWERS_LIMIT:-200}
+      LIVE_SCAN_FOLLOWING_LIMIT: ${LIVE_SCAN_FOLLOWING_LIMIT:-200}
+      LIVE_SCAN_PROFILE_PICS_LIMIT: ${LIVE_SCAN_PROFILE_PICS_LIMIT:-50}
+      LIVE_SCAN_COOLDOWN_SECONDS: ${LIVE_SCAN_COOLDOWN_SECONDS:-120}
     read_only: true
     tmpfs:
       - /tmp:size=1g,mode=1777
